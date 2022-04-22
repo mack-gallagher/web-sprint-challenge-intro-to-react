@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import axios from 'axios';
 import Character from './components/Character.js';
 
@@ -9,6 +10,13 @@ const App = () => {
 
   const [ characters, setCharacters ] = useState([]);
 
+  const StyledInnerAppContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+  `
+
   // Fetch characters from the API in an effect hook. Remember, anytime you have a 
   // side effect in a component, you want to think about which state and/or props it should
   // sync up with, if any.
@@ -16,6 +24,7 @@ const App = () => {
   useEffect(() => {
     axios.get('https://swapi.dev/api/people')
       .then(res => {
+        console.log(res);
         setCharacters(res.data.results);
       })
       .catch(err => {console.log(err)}) 
@@ -25,9 +34,16 @@ const App = () => {
   return (
     <div className="App">
       <h1 className="Header">Characters</h1>
-      {characters.map(character => {
-        return <Character name={character.name} />;
-      })}
+      <StyledInnerAppContainer>
+        {characters.map((character, idx) => {
+          return <Character 
+                   name={character.name} 
+                   eyeColor={character.eye_color}
+                   height={character.height}
+                   mass={character.mass}
+                   key={idx} />;
+        })}
+      </StyledInnerAppContainer>
     </div>
   );
 }
